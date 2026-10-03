@@ -1,0 +1,55 @@
+// Testa as funções do mini SO que não dependem do vídeo/teclado do FPGRARS.
+// Define o próprio Sys.init para não usar o do mini SO (que limpa a tela).
+function Sys.init 0
+	push constant 7
+	push constant 6
+	call Math.multiply 2
+	pop static 0          // 42
+	push constant 0
+	push constant 100
+	sub
+	push constant 7
+	call Math.divide 2
+	pop static 1          // -14 (arredonda para zero)
+	push constant 0
+	push constant 5
+	sub
+	call Math.abs 1
+	pop static 2          // 5
+	push constant 3
+	push constant 9
+	call Math.min 2
+	pop static 3          // 3
+	push constant 3
+	push constant 9
+	call Math.max 2
+	pop static 4          // 9
+	push constant 1000
+	call Math.sqrt 1
+	pop static 5          // 31
+	push constant 10
+	call Memory.alloc 1
+	pop static 6          // 2048 (início do heap)
+	push constant 5
+	call Array.new 1
+	pop static 7          // 2058
+	push static 7
+	push constant 123
+	call Memory.poke 2
+	pop temp 0            // a[0] = 123
+	push static 7
+	call Memory.peek 1
+	pop static 8          // 123
+	push static 7         // a[2] = 77, do jeito que o compilador Jack gera
+	push constant 2
+	add
+	pop pointer 1
+	push constant 77
+	pop that 0
+	push static 7
+	push constant 2
+	add
+	call Memory.peek 1
+	pop static 9          // 77
+	label END
+	goto END

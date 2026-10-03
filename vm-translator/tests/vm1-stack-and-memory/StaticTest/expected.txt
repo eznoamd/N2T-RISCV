@@ -1,0 +1,2 @@
+# era: RAM[256]=1110
+mem stack_base[0] = 1110

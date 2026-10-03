@@ -1,0 +1,30 @@
+# frame falso igual ao do SimpleFunction.tst, montado na pilha:
+#   stack_base[0..2] = argumentos 1234 37 1000      (ARG)
+#   stack_base[3..7] = RET LCL ARG THIS THAT salvos  (RET = vm_halt)
+#   LCL = SP = stack_base[8]
+setup: li   t0, 1234
+setup: sw   t0, 0(sp)
+setup: li   t0, 37
+setup: sw   t0, 4(sp)
+setup: li   t0, 1000
+setup: sw   t0, 8(sp)
+setup: la   t0, vm_halt
+setup: sw   t0, 12(sp)
+setup: li   t0, 305
+setup: sw   t0, 16(sp)
+setup: li   t0, 300
+setup: sw   t0, 20(sp)
+setup: li   t0, 3010
+setup: sw   t0, 24(sp)
+setup: li   t0, 4010
+setup: sw   t0, 28(sp)
+setup: mv   s1, sp
+setup: addi sp, sp, 32
+setup: mv   s0, sp
+# return: *ARG = 1196, SP = ARG+1 e LCL/ARG/THIS/THAT restaurados
+reg sp = stack_base[1]
+mem stack_base[0] = 1196
+reg s0 = 305
+reg s1 = 300
+reg s2 = 3010
+reg s3 = 4010

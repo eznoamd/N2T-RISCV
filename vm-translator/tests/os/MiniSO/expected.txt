@@ -1,0 +1,4 @@
+# Sys.0 .. Sys.9 ficam em sequência no .data
+mem Sys.0 = 42 -14 5 3 9 31 2048 2058 123 77
+mem ram[2058] = 123 0 77
+mem os_heap = 2063

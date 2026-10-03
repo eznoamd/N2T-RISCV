@@ -1,0 +1,6 @@
+# pointer guarda endereços de palavra: THIS=3030 vira s2 = ram[3030]
+mem stack_base[0] = 6084
+reg s2 = ram[3030]
+reg s3 = ram[3040]
+mem ram[3032] = 32
+mem ram[3046] = 46

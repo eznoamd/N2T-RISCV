@@ -1,0 +1,16 @@
+# preenche a pilha com -1 para conferir que "function" zera as locais
+setup: li   t0, -1
+setup: la   t1, stack_base
+setup: li   t2, 64
+setup: nested_fill:
+setup: sw   t0, 0(t1)
+setup: addi t1, t1, 4
+setup: addi t2, t2, -1
+setup: bnez t2, nested_fill
+# Sys.init termina em laço infinito: o teste para pelo limite de passos
+mem temp_base[0] = 135 246
+reg s2 = ram[4000]
+reg s3 = ram[5000]
+reg sp = stack_base[5]
+reg s0 = stack_base[5]
+reg s1 = stack_base[0]

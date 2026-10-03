@@ -1,0 +1,15 @@
+# mesmos endereços do BasicTest.tst original, dentro da RAM da VM:
+# LCL=300, ARG=400, THIS=3000, THAT=3010
+setup: addi s0, s4, 1200
+setup: addi s1, s4, 1600
+setup: li   t0, 12000
+setup: add  s2, s4, t0
+setup: li   t0, 12040
+setup: add  s3, s4, t0
+mem stack_base[0] = 472
+mem ram[300] = 10
+mem ram[401] = 21 22
+mem ram[3006] = 36
+mem ram[3012] = 42
+mem ram[3015] = 45
+mem temp_base[6] = 510

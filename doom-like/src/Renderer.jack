@@ -1,0 +1,145 @@
+class Renderer {
+
+    field Raycaster raycaster;
+
+    field int FOV;
+    field int screenWidth;
+    field int numRays;
+    field int rayWidth;
+
+
+    constructor Renderer new(Raycaster nraycaster) {
+        let raycaster = nraycaster;
+
+        let FOV = 64; // angulo de visão do player
+        let screenWidth = 512; // tamanho da tela (fixo no nand2tetris)
+        let numRays = 128; // numero de raios/colunas na tela
+        let rayWidth = screenWidth / numRays; // tamanho de cada coluna com base na quantidade de raios
+
+        return this;
+    }
+
+
+    method void render(Player player) {
+        var int ray; // contador de raios
+
+        var int rayAngle;    // angulo absoluto do raio no mundo
+        var int angleOffset; // quanto o raio esta deslocado em relação a camera 
+
+        var int distanceFixed; // recebe a distancia do raycast
+        var int wallHeight;    // altura da coluna  
+
+        var int x;
+        var int top;
+        var int bottom;
+
+        let ray = 0;
+
+        // a tela não é limpa antes: cada coluna desenha teto, parede e chão,
+        // então cada pixel vai direto do quadro anterior para o novo
+        // (limpar e redesenhar fazia a tela piscar em branco)
+
+        // enquanto não tivermos printado todos os raios
+        while (ray < numRays) { 
+            // isso seria os graus de diferença * o raio atual
+            // offset = raio atual * FOV / raios totais
+            let angleOffset = Math.divide(ray * FOV, numRays);
+
+            // desloca pra esquerda o offset com base na metade do FOV 
+            let angleOffset = angleOffset - (FOV / 2);
+
+            // aplica isso em cima do angulo do player 
+            let rayAngle = player.getAngle() + angleOffset;
+
+            while (rayAngle < 0) { // corrige angulos menores que 0
+                let rayAngle = rayAngle + 360;
+            }
+
+            while (~(rayAngle < 360)) { // corrige angulos maiores que 360
+                let rayAngle = rayAngle - 360;
+            }
+
+            // aplica o cast desse raio com base na posição do player
+            // detalhes sobre o cast ver em ./Raycaster.jack
+            let distanceFixed = raycaster.castRay(
+                player.getXFixed(),
+                player.getYFixed(),
+                rayAngle
+            );
+
+            if (distanceFixed < 1) {
+                // evita possiveis problemas de paredes extremamente grandes
+                // por erros de divisão dos Fixed ou de paredes muito próximas do player
+                let distanceFixed = 1;
+            }
+
+            // divide uma altura pela distancia
+            // distancias muito grandes tendem a resultarem em heights menores
+            // distancias muito pequenas tendem a resultarem em heights maiores 
+            // a escolha para 25600 se deve ao fato de 100*256 / distance*256 = non fixed
+            // poderia ser escolhido outros valores que mudariam a escala das paredes na tela
+            // mas 25600 funciona bem com os valores retornados pelo distanceFixed
+            let wallHeight = Math.divide(25600, distanceFixed);
+
+            if (wallHeight > 256) {
+                // limita a altura a somente 256 (altura da tela)
+                let wallHeight = 256;
+            }
+
+            // centro da tela - metade da altura da parede
+            let top = 128 - (wallHeight / 2);
+
+            // centro da tela + metade da altura da parede
+            let bottom = 128 + (wallHeight / 2);
+
+            if (top < 0) {
+                // evita tentar desenhar algo fora da tela 
+                let top = 0;
+            }
+
+            if (bottom > 255) {
+                // evita tentar desenhar algo fora da tela 
+                let bottom = 255;
+            }
+            
+            // x = raio atual * o tamanho de cada coluna na tela
+            let x = ray * rayWidth;
+
+            // teto (branco), só se a parede não começar no topo da tela:
+            // drawRectangle com y2 < y1 é erro no SO do nand2tetris
+            if (top > 0) {
+                do Screen.setColor(false);
+                do Screen.drawRectangle(
+                    x,
+                    0,
+                    x + rayWidth - 1,
+                    top - 1
+                );
+            }
+
+            // parede (preto)
+            do Screen.setColor(true);
+            do Screen.drawRectangle(
+                x,
+                top,
+                x + rayWidth - 1,
+                bottom
+            );
+
+            // chão (branco), só se a parede não terminar no fim da tela
+            if (bottom < 255) {
+                do Screen.setColor(false);
+                do Screen.drawRectangle(
+                    x,
+                    bottom + 1,
+                    x + rayWidth - 1,
+                    255
+                );
+            }
+
+            let ray = ray + 1;
+        }
+
+        return;
+    }
+}

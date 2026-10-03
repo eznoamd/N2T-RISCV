@@ -1,0 +1,8 @@
+# LCL=300, ARG=400, argument 0 = 6 (n), argument 1 = 3000 (endereço da série)
+setup: addi s0, s4, 1200
+setup: addi s1, s4, 1600
+setup: li   t0, 6
+setup: sw   t0, 0(s1)
+setup: li   t0, 3000
+setup: sw   t0, 4(s1)
+mem ram[3000] = 0 1 1 2 3 5

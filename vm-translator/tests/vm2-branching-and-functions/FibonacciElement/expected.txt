@@ -1,0 +1,3 @@
+# fib(4) = 3, logo acima do frame de 5 palavras do bootstrap (era: RAM[261]=3)
+reg sp = stack_base[6]
+mem stack_base[5] = 3

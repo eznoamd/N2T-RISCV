@@ -1,0 +1,12 @@
+class Main {
+
+    function void main() {
+        var Game game;
+
+        do Math.init(); // inicializa as modificações da Math
+        let game = Game.new();
+        do game.run(); // run game
+        
+        return;
+    }
+}

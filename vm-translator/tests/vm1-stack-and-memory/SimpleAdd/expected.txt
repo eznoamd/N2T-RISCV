@@ -1,0 +1,3 @@
+# 7 + 8 (era: RAM[0]=257, RAM[256]=15)
+reg sp = stack_base[1]
+mem stack_base[0] = 15

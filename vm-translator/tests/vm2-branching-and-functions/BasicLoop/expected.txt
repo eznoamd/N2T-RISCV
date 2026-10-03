@@ -1,0 +1,7 @@
+# LCL=300, ARG=400, argument 0 = 3  ->  0+1+2+3 = 6
+setup: addi s0, s4, 1200
+setup: addi s1, s4, 1600
+setup: li   t0, 3
+setup: sw   t0, 0(s1)
+reg sp = stack_base[1]
+mem stack_base[0] = 6
